@@ -19,9 +19,19 @@ TempoDetect::TempoDetect()
 	lowPoint = false;
 	highPoint = false;
 }
-bool TempoDetect::detect(Leap::Vector point, Leap::Vector normal)
+
+/* *****************************
+Function: detect
+Author: Chase Carthen
+Description: Accepts a point given to the algorith and a velocity vector.
+
+Starts a clock from the instant the hand enters the leaps field and
+then stops the clock when it detects a downbeat. The BPM is then calculated.
+
+********************************/
+bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity)
 {
-			  // std::cout << normal.y << std::endl;
+			  // std::cout << velocity.y << std::endl;
 	if(!highPoint && !lowPoint)
 	{
 		lowpoint =highpoint = point;
@@ -32,7 +42,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector normal)
 	else if ( highPoint)
 	{
 
-	   if(normal.y >= 0.0f && lowpoint.magnitudeSquared() <= point.magnitudeSquared())
+	   if(velocity.y >= 0.0f && highpoint.magnitudeSquared() <= point.magnitudeSquared())
 	   {
 		   finish = clock() - start;
 		   double interval = finish / (double)CLOCKS_PER_SEC;
@@ -45,11 +55,11 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector normal)
 		   return true;
 	   }
 	   else
-		   lowpoint = point;
+		   highpoint = point;
 	}
 	if(lowPoint)
 	{
-		if(normal.y <= 0.0f && point.magnitudeSquared() <= highpoint.magnitudeSquared())
+		if(velocity.y <= 0.0f && point.magnitudeSquared() <= lowpoint.magnitudeSquared())
 		{
 		   finish = clock() - start;
 		   lowpoint = highpoint = point;
@@ -58,7 +68,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector normal)
 		   return true;
 		}
 	    else
-            highpoint = point;
+            lowpoint = point;
 	}
 	return false;
 }

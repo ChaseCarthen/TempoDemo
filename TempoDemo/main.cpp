@@ -11,10 +11,13 @@ class SampleListener : public Listener {
     virtual void onDisconnect(const Controller&);
     virtual void onExit(const Controller&);
     virtual void onFrame(const Controller&);
+	private:
+	int frameCount;
 };
 
 void SampleListener::onInit(const Controller& controller) {
   std::cout << "Initialized" << std::endl;
+  frameCount = 0;
 }
 
 void SampleListener::onConnect(const Controller& controller) {
@@ -34,13 +37,43 @@ void SampleListener::onFrame(const Controller& controller) {
   const Frame frame = controller.frame();
   if(frame.hands().count() >= 1 )
   {
-	  globalDector.detect(frame.hands()[0].palmPosition(),frame.hands()[0].palmVelocity());
+	  if(globalDector.detect(frame.hands()[0].palmPosition(),frame.hands()[0].palmVelocity()))
+	  {
+		  frameCount = 0;
+	  }
+	  else
+	  {
+		  frameCount++;
+	  }
+	  if(frameCount >= 100)
+	  {
+          frameCount = 0;
+		  globalDector.reset();
+	  }
 	  std::cout << "Tempo " << globalDector.getTempo() << std::endl;
+  }
+  else if(controller.frame(1).hands().count() >= 1)
+  {
+	  if(globalDector.detect(controller.frame(1).hands()[0].palmPosition(),controller.frame(1).hands()[0].palmVelocity()))
+	  {
+		  frameCount = 0;
+	  }
+	  else
+	  {
+		  frameCount++;
+	  }
+	  if(frameCount >= 100)
+	  {
+          frameCount = 0;
+		  globalDector.reset();
+	  }
+	  std::cout << "Tempo past" << globalDector.getTempo() << std::endl;
   }
   else
   {
 	  globalDector.reset();
   }
+
 }
 
 int main()

@@ -18,9 +18,12 @@ class TempoDetect
 	   float Tempo;
 	   Leap::Vector highpoint;
 	   Leap::Vector lowpoint;
+	   Leap::Vector lastDownBeat;
 	   Leap::Vector currentDirection;
+	   Leap::Vector previousPoint;
 	   clock_t start;
 	   clock_t finish;
 	   bool highPoint;
 	   bool lowPoint;
+	   float range;
 };

@@ -71,7 +71,10 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity)
 		   return true;
 	   }
 	   else
+	   {
 		   highpoint = point;
+		   //return true;
+	   }
 	}
 	else if(lowPoint)
 	{
@@ -85,7 +88,10 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity)
 		   return true;
 		}
 	    else
+		{
             lowpoint = point;
+			//return true;
+		}
 	}
     previousPoint = point;
 	return false;

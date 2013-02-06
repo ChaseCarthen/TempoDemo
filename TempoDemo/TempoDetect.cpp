@@ -30,12 +30,19 @@ Starts a clock from the instant the hand enters the leaps field and
 then stops the clock when it detects a downbeat. The BPM is then calculated.
 
 ********************************/
-bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity)
+bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 {
     
 	// for detecting if hand is still
 	if(previousPoint.distanceTo(point) <= 3.0)
+	{
+	   still = true;
        return false;
+	}
+	else
+	{
+		still = false;
+	}
 	if(!highPoint && !lowPoint)
 	{
 		lastDownBeat = lowpoint =highpoint = point;
@@ -93,10 +100,12 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity)
 float TempoDetect::getTempo()
 {
 	return Tempo;
-	/*if (Tempo < 120)
-		return 120.0;
+	if (Tempo < 120)
+		return 30.0;
+	else if( Tempo > 400.0)
+		return 400.0;
 	else
-		return Tempo;*/
+		return Tempo;
 }
 void TempoDetect::reset()
 {

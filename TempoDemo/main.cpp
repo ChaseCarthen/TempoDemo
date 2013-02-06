@@ -13,11 +13,15 @@ class SampleListener : public Listener {
     virtual void onFrame(const Controller&);
 	private:
 	int frameCount;
+	int maxFrameCount;
+	bool isStill;
 };
 
 void SampleListener::onInit(const Controller& controller) {
   std::cout << "Initialized" << std::endl;
   frameCount = 0;
+  maxFrameCount = 100;
+  isStill = false;
 }
 
 void SampleListener::onConnect(const Controller& controller) {
@@ -35,9 +39,14 @@ void SampleListener::onExit(const Controller& controller) {
 void SampleListener::onFrame(const Controller& controller) {
   // Get the most recent frame and report some basic information
   const Frame frame = controller.frame();
+  bool dummy;
+  if(isStill)
+  {
+	  std::cout << "Your holding your hand still dummy" << std::endl;
+  }
   if(frame.hands().count() >= 1 )
   {
-	  if(globalDector.detect(frame.hands()[0].palmPosition(),frame.hands()[0].palmVelocity()))
+	  if(globalDector.detect(frame.hands()[0].palmPosition(),frame.hands()[0].palmVelocity(),isStill))
 	  {
 		  frameCount = 0;
 	  }
@@ -54,7 +63,7 @@ void SampleListener::onFrame(const Controller& controller) {
   }
   else if(controller.frame(1).hands().count() >= 1)
   {
-	  if(globalDector.detect(controller.frame(1).hands()[0].palmPosition(),controller.frame(1).hands()[0].palmVelocity()))
+	  if(globalDector.detect(controller.frame(1).hands()[0].palmPosition(),controller.frame(1).hands()[0].palmVelocity(),dummy))
 	  {
 		  frameCount = 0;
 	  }
@@ -62,7 +71,7 @@ void SampleListener::onFrame(const Controller& controller) {
 	  {
 		  frameCount++;
 	  }
-	  if(frameCount >= 100)
+	  if(frameCount >= maxFrameCount)
 	  {
           frameCount = 0;
 		  globalDector.reset();

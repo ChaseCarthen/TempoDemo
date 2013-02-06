@@ -10,7 +10,7 @@ class TempoDetect
 {
    public:
       TempoDetect();
-	  bool detect(Leap::Vector point, Leap::Vector velocity );
+	  bool detect(Leap::Vector point, Leap::Vector velocity, bool& still );
 	  float getTempo();
 	  void reset();
 

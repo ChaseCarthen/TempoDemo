@@ -55,7 +55,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 	{
        if(highpoint == lastDownBeat)
 		   lastDownBeat = point;  // Really a new down -- this will set a new downbeat if person is replacing hands in or just first time placing in.
-	   if(velocity.y >= 0.0f && highpoint.magnitudeSquared() <= point.magnitudeSquared() && lastDownBeat.distanceTo(point) < range)
+	   if(velocity.y >= 0.0f /*&& highpoint.magnitudeSquared() <= point.magnitudeSquared() && lastDownBeat.distanceTo(point) < range*/)
 	   {
 		   finish = clock() - start;
 		   double interval = finish / (double)CLOCKS_PER_SEC;
@@ -82,7 +82,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 	}
 	else if(lowPoint)
 	{
-		if(velocity.y <= 0.0f && point.magnitudeSquared() <= lowpoint.magnitudeSquared())
+		if(velocity.y <= 0.0f /*&& point.magnitudeSquared() <= lowpoint.magnitudeSquared()*/)
 		{
 		   finish = clock() - start;
 		   lowpoint = highpoint = point;

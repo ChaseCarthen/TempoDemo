@@ -65,9 +65,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TempoDetect.cpp" />
+    <ClCompile Include="TempoListner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TempoDetect.h" />
+    <ClInclude Include="TempoListner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,6 +14,7 @@ TempoDetect::TempoDetect()
 {
 	Tempo = 120.0;
 	range = 25.0;
+	count = 0;
 	lastDownBeat = highpoint = Leap::Vector(0.0,0.0,0.0);
 	lowpoint = Leap::Vector(0.0,0.0,0.0);
 	currentDirection = Leap::Vector(0.0,0.0,0.0);
@@ -28,6 +29,9 @@ Description: Accepts a point given to the algorith and a velocity vector.
 
 Starts a clock from the instant the hand enters the leaps field and
 then stops the clock when it detects a downbeat. The BPM is then calculated.
+
+Addition:
+Counting Downbeats and keeping track of patterns.
 
 ********************************/
 bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
@@ -63,6 +67,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   // calculate BPM 1 B / X SEC * 60 sec / 1 min = Y B / MIN
 		   float LastTempo = Tempo;
 		   Tempo = 1.0/interval*60.0;
+		   count++;
 		   if(Tempo > 400.0)
 		   {
 			   Tempo = LastTempo;
@@ -74,6 +79,12 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   highPoint = false;
 		   lowPoint = true;
 		   start=clock();
+
+		   Leap::Vector tempor = Leap::Vector::forward();
+		   if(velocity.dot(tempor) == 0)
+		   {
+			   count = 0;
+		   }
 		   previousPoint = point;
 		   return true;
 	   }
@@ -89,6 +100,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   highPoint = true;
 		   lowPoint = false;
 		   previousPoint = point;
+		   
 		   return true;
 		}
 	    else
@@ -100,7 +112,7 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 float TempoDetect::getTempo()
 {
 	return Tempo;
-	if (Tempo < 120)
+	if (Tempo < 30)
 		return 30.0;
 	else if( Tempo > 400.0)
 		return 400.0;
@@ -110,4 +122,9 @@ float TempoDetect::getTempo()
 void TempoDetect::reset()
 {
 	lowPoint = highPoint = false;
+}
+
+float TempoDetect::getCount()
+{
+	return count;
 }

@@ -21,9 +21,15 @@
     <ClCompile Include="TempoDetect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TempoListner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TempoDetect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TempoListner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

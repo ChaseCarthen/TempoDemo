@@ -12,6 +12,7 @@ class TempoDetect
       TempoDetect();
 	  bool detect(Leap::Vector point, Leap::Vector velocity, bool& still );
 	  float getTempo();
+	  float getCount();
 	  void reset();
 
    private:
@@ -26,4 +27,5 @@ class TempoDetect
 	   bool highPoint;
 	   bool lowPoint;
 	   float range;
+	   int count;
 };

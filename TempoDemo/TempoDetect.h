@@ -22,10 +22,16 @@ class TempoDetect
 	   Leap::Vector lastDownBeat;
 	   Leap::Vector currentDirection;
 	   Leap::Vector previousPoint;
+	   Leap::Vector testpoint;
+	   Leap::Vector testpoint2;
 	   clock_t start;
 	   clock_t finish;
 	   bool highPoint;
 	   bool lowPoint;
+	   bool testCheck;
+	   bool beatone;
 	   float range;
 	   int count;
+	   int frameCount;
+	   float average;
 };

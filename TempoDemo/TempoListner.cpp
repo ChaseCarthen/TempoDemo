@@ -27,7 +27,8 @@ void TempoListener::onFrame(const Controller& controller) {
   bool dummy;
   if(isStill)
   {
-	  std::cout << "Your holding your hand still dummy" << std::endl;
+	  //std::cout << "Your holding your hand still dummy" << std::endl;
+	  //return;
   }
   if(frame.hands().count() >= 1 )
   {
@@ -44,7 +45,7 @@ void TempoListener::onFrame(const Controller& controller) {
           frameCount = 0;
 		  globalDector.reset();
 	  }
-	  std::cout << "Tempo " << globalDector.getTempo() << std::endl;
+	  //std::cout << "Tempo " << globalDector.getTempo() << std::endl;
 	  std::cout << globalDector.getCount() << std::endl;
   }
   else if(controller.frame(1).hands().count() >= 1)
@@ -62,7 +63,7 @@ void TempoListener::onFrame(const Controller& controller) {
           frameCount = 0;
 		  globalDector.reset();
 	  }
-	  //std::cout << "Tempo past" << globalDector.getTempo() << std::endl;
+	  std::cout << "Tempo past" << globalDector.getTempo() << std::endl;
   }
   else
   {

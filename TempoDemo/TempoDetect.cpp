@@ -20,6 +20,7 @@ TempoDetect::TempoDetect()
 	currentDirection = Leap::Vector(0.0,0.0,0.0);
 	lowPoint = false;
 	highPoint = false;
+	testCheck = false;
 }
 
 /* *****************************
@@ -36,7 +37,9 @@ Counting Downbeats and keeping track of patterns.
 ********************************/
 bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 {
-    
+    		   
+		   //if(tempor.angleTo(velocity)*Leap::RAD_TO_DEG<11)
+		//	   std::cout << tempor.angleTo(velocity)*Leap::RAD_TO_DEG << " " << velocity.normalized() << std::endl;
 	// for detecting if hand is still
 	if(previousPoint.distanceTo(point) <= 3.0)
 	{
@@ -53,8 +56,12 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		highPoint = true;
 		start = clock();
 		previousPoint = point;
+		average = 0;
+		frameCount =0;
+		beatone = false;
 		return false;
 	}
+	//drop phase
 	else if ( highPoint)
 	{
        if(highpoint == lastDownBeat)
@@ -67,7 +74,13 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   // calculate BPM 1 B / X SEC * 60 sec / 1 min = Y B / MIN
 		   float LastTempo = Tempo;
 		   Tempo = 1.0/interval*60.0;
+		   if((testpoint - point).magnitude() <200)
 		   count++;
+		   else
+			   count = 0;
+		   //if(beatone)
+		//	   count =0;
+		   //beatone = false;
 		   if(Tempo > 400.0)
 		   {
 			   Tempo = LastTempo;
@@ -76,21 +89,36 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   {
 			   lastDownBeat = point;
 		   }
+		   testCheck = false;
 		   highPoint = false;
 		   lowPoint = true;
 		   start=clock();
-
-		   Leap::Vector tempor = Leap::Vector::forward();
-		   if(velocity.dot(tempor) == 0)
-		   {
-			   count = 0;
-		   }
+		   average = average/(float)frameCount;
+		   //std::cout << average *Leap::RAD_TO_DEG<< std::endl;
+		   average = 0;
+		   frameCount = 0;
+		   //std::cout << (testpoint - point).magnitude() << std::endl;
+		   //if(tempor.angleTo(velocity)*Leap::DEG_TO_RAD < 2.0f)
+		   //{
+		//	   count = 0;
+		  // }
 		   previousPoint = point;
 		   return true;
 	   }
 	   else
+	   {
+		   average += velocity.angleTo( Leap::Vector::down());
+		   if(15.5f<Leap::RAD_TO_DEG*velocity.angleTo( Leap::Vector::down()) && !testCheck)
+		   {
+			   testpoint = point;
+			   testCheck = true;
+		   }
+		   
+		   frameCount++;
 		   highpoint = point;
+	   }
 	}
+	// rise phase
 	else if(lowPoint)
 	{
 		if(velocity.y <= 0.0f /*&& point.magnitudeSquared() <= lowpoint.magnitudeSquared()*/)
@@ -100,11 +128,15 @@ bool TempoDetect::detect(Leap::Vector point, Leap::Vector velocity, bool& still)
 		   highPoint = true;
 		   lowPoint = false;
 		   previousPoint = point;
-		   
+		   //std::cout << velocity.angleTo(Leap::Vector::down())*Leap::RAD_TO_DEG << std::endl;
 		   return true;
 		}
 	    else
+		{
+			///average += velocity.angleTo( Leap::Vector::down());
+		    //frameCount++;
             lowpoint = point;
+		}
 	}
     previousPoint = point;
 	return false;
